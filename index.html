@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fotos de Nuestra Boda</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.9)),
+                        url('fond.jpeg');
+            background-size: cover;
+            background-attachment: fixed;
+            color: #4a4a4a;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5em;
+            color: #d4a373;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .names {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5em;
+            color: #DAA520;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .upload-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 2px solid #fae1dd;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .custom-file-upload {
+            background-color: #d4a373;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+            border: none;
+            margin: 10px;
+        }
+
+        .custom-file-upload:hover {
+            background-color: #bc8a5f;
+            transform: translateY(-2px);
+        }
+
+        #uploadButton {
+            background-color: #e9c0b9;
+            color: #fff;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        #uploadButton:hover {
+            background-color: #e5b0a7;
+            transform: translateY(-2px);
+        }
+
+        .progress {
+            margin: 20px 0;
+            display: none;
+        }
+
+        .progress-text {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: #6b705c;
+        }
+
+        .progress-bar {
+            background-color: #fae1dd;
+            border-radius: 50px;
+            padding: 4px;
+            margin: 0 auto;
+            max-width: 300px;
+        }
+
+        .progress-bar-fill {
+            background-color: #d4a373;
+            height: 20px;
+            border-radius: 50px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .success-message {
+            color: #4CAF50;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 10px;
+            display: none;
+            background-color: #f1f8e9;
+            border: 1px solid #c5e1a5;
+        }
+
+        .error-message {
+            color: #ff5252;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+            background-color: #ffedef;
+            border-radius: 10px;
+            border: 1px solid #ffcdd2;
+        }
+
+        #uploadStatus {
+            margin-top: 15px;
+            color: #6b705c;
+            font-style: italic;
+        }
+
+        .decoration {
+            position: fixed;
+            width: 150px;
+            height: 150px;
+            pointer-events: none;
+            opacity: 0.1;
+        }
+
+        .decoration.top-left {
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at top left, #d4a373, transparent);
+        }
+
+        .decoration.top-right {
+            top: 0;
+            right: 0;
+            background: radial-gradient(circle at top right, #e9c0b9, transparent);
+        }
+
+        .decoration.bottom-left {
+            bottom: 0;
+            left: 0;
+            background: radial-gradient(circle at bottom left, #e9c0b9, transparent);
+        }
+
+        .decoration.bottom-right {
+            bottom: 0;
+            right: 0;
+            background: radial-gradient(circle at bottom right, #d4a373, transparent);
+        }
+
+        .icon-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            color: #6b705c;
+        }
+
+        .icon-text i {
+            color: #d4a373;
+        }
+
+        .selected-files {
+            margin: 10px 0;
+            padding: 10px;
+            color: #6b705c;
+            font-size: 0.9em;
+        }
+/* Ajustes para pantallas móviles */
+@media screen and (max-width: 480px) {
+    h1 {
+        font-size: 2.5em;  /* Título más pequeño en móvil */
+    }
+    
+    .names {
+        font-size: 2em;    /* Nombres más pequeños en móvil */
+    }
+
+    .container {
+        padding: 20px 10px;  /* Menos padding en los lados */
+    }
+
+    .custom-file-upload, #uploadButton {
+        padding: 12px 20px;  /* Botones más compactos */
+        font-size: 1em;
+        margin: 5px;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="decoration top-left"></div>
+    <div class="decoration top-right"></div>
+    <div class="decoration bottom-left"></div>
+    <div class="decoration bottom-right"></div>
+
+    <div class="container">
+        <h1>Nuestra Boda</h1>
+        <div class="names">Edson y Giancarla</div>
+        
+        <div class="upload-container">
+            <div class="icon-text">
+                <i class="fas fa-camera"></i>
+                <span>Comparte tus fotos favoritas de este día especial</span>
+            </div>
+
+            <div class="file-input-wrapper">
+                <input type="file" id="fileInput" multiple accept="image/*">
+                <label for="fileInput" class="custom-file-upload">
+                    <i class="fas fa-image"></i> Seleccionar Fotos
+                </label>
+                <button id="uploadButton">
+                    <i class="fas fa-cloud-upload-alt"></i> Subir Fotos
+                </button>
+            </div>
+
+            <div class="selected-files" id="selectedFiles"></div>
+
+            <div id="progress" class="progress">
+                <div class="progress-text">Progreso: <span id="progressText">0/0</span></div>
+                <div class="progress-bar">
+                    <div id="progressBarFill" class="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <div id="successMessage" class="success-message">
+                <i class="fas fa-heart"></i> ¡Gracias por compartir tus recuerdos con nosotros!
+            </div>
+            <div id="errorMessage" class="error-message"></div>
+            <div id="uploadStatus"></div>
+        </div>
+    </div>
+
+    <script>
+        // Configura tus API keys aquí
+        const API_KEYS = [
+            'b37391aacfbfe9f9a7c3a58f5d79b55c'
+        ];
+        
+        let currentKeyIndex = 0;
+
+        function getNextApiKey() {
+            currentKeyIndex = (currentKeyIndex + 1) % API_KEYS.length;
+            return API_KEYS[currentKeyIndex];
+        }
+
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const selectedFiles = document.getElementById('selectedFiles');
+            if (this.files.length > 0) {
+                selectedFiles.textContent = `${this.files.length} archivo(s) seleccionado(s)`;
+            } else {
+                selectedFiles.textContent = '';
+            }
+        });
+
+        async function uploadImage(file, totalFiles, currentFileIndex) {
+            const formData = new FormData();
+            formData.append('image', file);
+            
+            const apiKey = getNextApiKey();
+            const statusDiv = document.getElementById('uploadStatus');
+            
+            try {
+                statusDiv.textContent = `Subiendo: ${file.name}`;
+                
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateProgress(totalFiles, currentFileIndex + 1);
+                    statusDiv.textContent = `${file.name} subido correctamente`;
+                    return true;
+                } else {
+                    throw new Error(data.error?.message || 'Error desconocido');
+                }
+            } catch (error) {
+                console.error("Error al subir:", error);
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('errorMessage').textContent = 
+                    `Error al subir ${file.name}: ${error.message}`;
+                return false;
+            }
+        }
+
+        function updateProgress(total, current) {
+            const progressText = document.getElementById('progressText');
+            const progressBarFill = document.getElementById('progressBarFill');
+            
+            progressText.textContent = `${current}/${total}`;
+            const percentage = (current / total) * 100;
+            progressBarFill.style.width = percentage + '%';
+
+            if (current === total) {
+                document.getElementById('successMessage').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('progress').style.display = 'none';
+                    document.getElementById('uploadStatus').textContent = '';
+                    setTimeout(() => {
+                        document.getElementById('successMessage').style.display = 'none';
+                        document.getElementById('errorMessage').style.display = 'none';
+                    }, 5000);
+                }, 1000);
+            }
+        }
+
+        document.getElementById('uploadButton').addEventListener('click', async () => {
+            const files = document.getElementById('fileInput').files;
+            const progress = document.getElementById('progress');
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const statusDiv = document.getElementById('uploadStatus');
+            
+            if (files.length === 0) {
+                alert('Por favor selecciona al menos una foto');
+                return;
+            }
+
+            progress.style.display = 'block';
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            statusDiv.textContent = `Preparando para subir ${files.length} archivos...`;
+
+            for (let i = 0; i < files.length; i++) {
+                const success = await uploadImage(files[i], files.length, i);
+                if (!success) {
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                }
+            }
+            
+            document.getElementById('fileInput').value = '';
+            document.getElementById('selectedFiles').textContent = '';
+        });
+    </script>
+</body>
+</html>
